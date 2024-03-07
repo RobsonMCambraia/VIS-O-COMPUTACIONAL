@@ -15,6 +15,15 @@ class handsDetector:
         self.complexity = complexity
         self.min_detection = min_detection
         self.min_traking = min_traking
+        
+        self.pipe_hands = mp.solutions.hands
+        self.hands = self.mp_hands.Hands(self.mode, 
+                                         self.max_hands, 
+                                         self.complexity_level, 
+                                         self.min_detection_conf, 
+                                         self.min_traking_conf)
+        
+        self.pipe_draw = mp.solutions.drawing_utils
 
 if __name__ == '__main__':
     capture = cv2.VideoCapture("src\hand_01.mp4")
@@ -29,3 +38,5 @@ if __name__ == '__main__':
         
         if cv2.waitKey(20) & 0xFF == ord('q') or not ret:
             break
+    capture.release()
+    cv2.destroyAllWindows()
