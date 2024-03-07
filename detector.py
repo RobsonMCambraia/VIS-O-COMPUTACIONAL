@@ -18,10 +18,10 @@ class HandsDetector:
         
         self.pipe_hands = mp.solutions.hands
         self.hands = self.pipe_hands.Hands(self.mode, 
-                                         self.n_hands, 
-                                         self.complexity, 
-                                         self.min_detection, 
-                                         self.min_traking)
+                                          self.n_hands, 
+                                          self.complexity, 
+                                          self.min_detection, 
+                                          self.min_traking)
         
         self.pipe_draw = mp.solutions.drawing_utils
 
@@ -32,8 +32,8 @@ class HandsDetector:
         if result.multi_hand_landmarks:
             for hand_landmarks in result.multi_hand_landmarks:
                 if draw_hands:
-                    self.mp_drawing.draw_landmarks(
-                        img, hand_landmarks, self.mp_hands.HAND_CONNECTIONS)
+                    self.pipe_draw.draw_landmarks(
+                        img, hand_landmarks, self.pipe_hands.HAND_CONNECTIONS)
                     
 if __name__ == '__main__':
     capture = cv2.VideoCapture("src/hand_01.mp4")
@@ -45,7 +45,7 @@ if __name__ == '__main__':
         ret, img = capture.read()
 
         img = cv2.resize(img, (width, height))
-        Detector.mp_hands(img, draw_hands=False)
+        Detector.mp_hands(img, draw_hands=True)
         cv2.imshow("hands", img)
 
         if cv2.waitKey(20) & 0xFF == ord('q') or not ret:
