@@ -9,5 +9,5 @@ while True:
     _, img = capture.read()
     cv2.imshow("hands", img)
     
-    if cv2.waitKey(20) & 0FF==ord('q'):
+    if cv2.waitKey(20) & 0xFF == ord('q') or not ret:
         break
