@@ -90,7 +90,9 @@ class HandsDetector:
             index_val = np.argmax(prediction)
             cv2.putText(img, classes[index_val], (self.x_min - 50, self.y_min - 65), cv2.FONT_HERSHEY_COMPLEX, 3,
                         (0, 0, 255), 5)
-
+            print(classes[index_val])
+            cv2.putText(img, classes[index_val], (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            
             return img
 
         except Exception as e:
