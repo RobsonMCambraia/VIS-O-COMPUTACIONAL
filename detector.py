@@ -89,20 +89,31 @@ class HandsDetector:
 
                 return cv2.rectangle(img, (self.x_min - 50, self.y_min - 50), (self.x_max + 50, self.y_max + 50), (0, 255, 0), 2)
 
-    def deteccao_modelo(self, 
-                        img: np.ndarray,
-                        data,
-                        model,
-                        classes):
+    def deteccao_modelo(self, img: np.ndarray, data, model, classes):
         try:
-            img_corte = img[self.y_min - 50 : self.y_max + 50, self.x_min - 50 : self.x_max + 50]
-            img_corte = cv2.resize(img_corte, (224, 224))        
-            normalized = (img_corte.astype(np.float32) / 127.0) - 1
-            data[0] = normalized
+            # Corta a mão da imagem
+            img_corte = img[self.y_min - 50: self.y_max + 50, self.x_min - 50: self.x_max + 50]
+            
+            # Redimensiona para o tamanho esperado pelo modelo
+            img_corte = cv2.resize(img_corte, (224, 224))
+            
+            # Normaliza a imagem
+            normalized = (img_corte.astype(np.float32) / 255.0)
+            
+            # Adiciona uma dimensão extra para criar um lote
+            data[0] = np.expand_dims(normalized, axis=0)
+            
+            # Realiza a predição
             prediction = model.predict(data)
+            
+            # Obtém o índice da classe prevista
             indexVal = np.argmax(prediction)
             
-            return cv2.putText(img, classes[indexVal], (self.x_min - 50, self.y_min - 65), cv2.FONT_HERSHEY_COMPLEX, 3, (0, 0, 255), 5)
+            # Adiciona a classe prevista à imagem
+            cv2.putText(img, classes[indexVal], (self.x_min - 50, self.y_min - 65), cv2.FONT_HERSHEY_COMPLEX, 3, (0, 0, 255), 5)
+            
+            return img
         
         except Exception as e:
             return (f"Erro na detecção do modelo: {e}")
+
