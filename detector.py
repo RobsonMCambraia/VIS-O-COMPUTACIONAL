@@ -68,12 +68,12 @@ class HandsDetector:
         cv2.putText(img, texto, (posicao_x, posicao_y - 10), fonte, tamanho_fonte, cor_texto, espessura_linha, cv2.LINE_AA)
         
     def desenhar_box(self, img: np.ndarray):
-        height, width, _ = img.shape
+        height, width, _ = img.shape  #posição da mão
 
         if self.result.multi_hand_landmarks:
             for hand in self.result.multi_hand_landmarks:
-                x_max, y_max = float('-inf'), float('-inf')
-                x_min, y_min = float('inf'), float('inf')
+                self.x_max, self.y_max = float('-inf'), float('-inf')
+                self.x_min, self.y_min = float('inf'), float('inf')
 
                 for lm in hand.landmark:
                     x, y = int(lm.x * width), int(lm.y * height)
@@ -84,5 +84,5 @@ class HandsDetector:
 
                 cv2.rectangle(img, (x_min - 50, y_min - 50), (x_max + 50, y_max + 50), (0, 255, 0), 2)
 
-
-        
+    def deteccao_modelo(self, data):
+        img_corte = 

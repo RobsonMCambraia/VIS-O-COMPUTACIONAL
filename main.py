@@ -6,16 +6,16 @@ from keras.models import load_model  # TensorFlow is required for Keras to work
 
 from detector import HandsDetector
 
-capture = cv2.VideoCapture("src\hand_01.mp4")
-# capture = cv2.VideoCapture(0)
+# capture = cv2.VideoCapture("src\hand_01.mp4")
+capture = cv2.VideoCapture(0)
 width, height = 740, 580
 
 Detector = HandsDetector()
 
 # Modelo keras
 model = load_model("model\keras_model.h5")
-data = np.ndarray(shape=(1, 244, 244, 3), dtype=np.float32)
-class_names = open("model\labels.txt", "r").readlines()
+data = np.ndarray(shape=(1, 244, 244, 3), dtype=np.float32) # array de entrada
+class_names = open("model\labels.txt", "r").readlines() 
 
 
 while True:
@@ -24,11 +24,14 @@ while True:
     img = cv2.resize(img, (width, height))
     Detector.mp_hands(img, draw_hands=True)
     landmark_hand = Detector.encontrar_dedos(img)
-    if landmark_hand:
-        for dedo_info in landmark_hand:
-            dedo, _, _ = dedo_info
-            if dedo in (2, 8): 
-                Detector.desenhar_info_dedo(img, dedo_info)        
+    box_hand = Detector.desenhar_box(img)
+    
+    # escreve na tela as coordenadas do dedo informado
+    # if landmark_hand:
+    #     for dedo_info in landmark_hand:
+    #         dedo, _, _ = dedo_info
+    #         if dedo in (2, 8): 
+    #             Detector.desenhar_info_dedo(img, dedo_info)        
 
     cv2.imshow("hands", img)
 
