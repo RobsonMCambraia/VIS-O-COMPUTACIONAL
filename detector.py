@@ -86,7 +86,7 @@ class HandsDetector:
             img_corte = cv2.resize(img_corte, (224, 224))
             normalized = (img_corte.astype(np.float32) / 255.0)
             data[0] = np.expand_dims(normalized, axis=0)
-            prediction = model.predict(data)
+            prediction = model.predict(data, verbose=0)
             index_val = np.argmax(prediction)
             cv2.putText(img, classes[index_val], (self.x_min - 50, self.y_min - 65), cv2.FONT_HERSHEY_COMPLEX, 3,
                         (0, 0, 255), 5)
