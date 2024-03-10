@@ -60,36 +60,7 @@ class HandsDetector:
         tamanho_fonte = 0.5
         espessura_linha = 1
 
-        dedo, posicao_x, posicao_y = info_dedo
-
-        posicao_x, posicao_y = int(posicao_x), int(posicao_y)
+        dedo, posicao_x, posicao_y = map(int, info_dedo)
 
         texto = f'Dedo: {dedo}, X: {posicao_x}, Y: {posicao_y}'
         cv2.putText(img, texto, (posicao_x, posicao_y - 10), fonte, tamanho_fonte, cor_texto, espessura_linha, cv2.LINE_AA)
-    
-if __name__ == '__main__':
-    # capture = cv2.VideoCapture("src\hand_01.mp4")
-    capture = cv2.VideoCapture(0)
-    width, height = 740, 580
-
-    Detector = HandsDetector()
-
-    while True:
-        ret, img = capture.read()
-
-        img = cv2.resize(img, (width, height))
-        Detector.mp_hands(img, draw_hands=True)
-        landmark_hand = Detector.encontrar_dedos(img)
-        if landmark_hand:
-            for dedo_info in landmark_hand:
-                dedo, _, _ = dedo_info
-                if dedo in (2, 8): 
-                    Detector.desenhar_info_dedo(img, dedo_info)        
-
-        cv2.imshow("hands", img)
-
-        if cv2.waitKey(20) & 0xFF == ord('q') or not ret:
-            break
-
-    capture.release()
-    cv2.destroyAllWindows()
