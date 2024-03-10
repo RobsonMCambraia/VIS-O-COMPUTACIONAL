@@ -15,7 +15,7 @@ Detector = HandsDetector()
 # Modelo keras
 model = load_model("model\keras_model.h5")
 data = np.ndarray(shape=(1, 244, 244, 3), dtype=np.float32) # array de entrada
-class_names = open("model\labels.txt", "r").readlines() 
+classes = open("model\labels.txt", "r").readlines() 
 
 
 while True:
@@ -25,6 +25,7 @@ while True:
     Detector.mp_hands(img, draw_hands=True)
     landmark_hand = Detector.encontrar_dedos(img)
     box_hand = Detector.desenhar_box(img)
+    model_detection = Detector.deteccao_modelo(img, data, model, classes)
     
     # escreve na tela as coordenadas do dedo informado
     # if landmark_hand:

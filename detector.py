@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import time
+from keras.models import load_model  # TensorFlow is required for Keras to work
 
 class HandsDetector:
     def __init__(self, 
@@ -84,5 +85,20 @@ class HandsDetector:
 
                 cv2.rectangle(img, (x_min - 50, y_min - 50), (x_max + 50, y_max + 50), (0, 255, 0), 2)
 
-    def deteccao_modelo(self, data):
-        img_corte = 
+    def deteccao_modelo(self, 
+                        img: np.ndarray,
+                        data,
+                        model,
+                        classes):
+        try:
+            img_corte = img[self.y_min - 50 : self.y_max + 50, self.x_min - 50 : self.x_max + 50]
+            img_corte = cv2.resize(img_corte, (224, 224))        
+            normalized = (img_corte.astype(np.float32) / 127.0) - 1
+            data[0] = normalized
+            prediction = model.predict(data)
+            indexVal = np.argmax(prediction)
+            
+            cv2.putText(img, classes[indexVal], (self.x_min - 50, self.y_min - 65), cv2.FONT_HERSHEY_COMPLEX, 3, (0, 0, 255), 5)
+        
+        except Exception as e:
+            print(f"Erro na detecção do modelo: {e}")
