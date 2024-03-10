@@ -82,25 +82,12 @@ class HandsDetector:
 
     def deteccao_modelo(self, img: np.ndarray, data, model, classes):
         try:
-            # Corta a mão da imagem
             img_corte = img[self.y_min - 50: self.y_max + 50, self.x_min - 50: self.x_max + 50]
-
-            # Redimensiona para o tamanho esperado pelo modelo
             img_corte = cv2.resize(img_corte, (224, 224))
-
-            # Normaliza a imagem
             normalized = (img_corte.astype(np.float32) / 255.0)
-
-            # Adiciona uma dimensão extra para criar um lote
             data[0] = np.expand_dims(normalized, axis=0)
-
-            # Realiza a predição
             prediction = model.predict(data)
-
-            # Obtém o índice da classe prevista
             index_val = np.argmax(prediction)
-
-            # Adiciona a classe prevista à imagem
             cv2.putText(img, classes[index_val], (self.x_min - 50, self.y_min - 65), cv2.FONT_HERSHEY_COMPLEX, 3,
                         (0, 0, 255), 5)
 
