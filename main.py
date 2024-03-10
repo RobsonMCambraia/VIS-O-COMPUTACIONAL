@@ -12,7 +12,7 @@ width, height = 740, 580
 
 Detector = HandsDetector()
 
-# Modelo
+# Modelo keras
 model = load_model("model\keras_model.h5")
 data = np.ndarray(shape=(1, 244, 244, 3), dtype=np.float32)
 class_names = open("model\labels.txt", "r").readlines()

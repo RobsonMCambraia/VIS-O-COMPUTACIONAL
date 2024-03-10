@@ -54,7 +54,9 @@ class HandsDetector:
                 
         return self.requerid_landmark_list
     
-    def desenhar_info_dedo(self, img, info_dedo):
+    def desenhar_info_dedo(self, 
+                           img: np.ndarray,
+                           info_dedo):
         fonte = cv2.FONT_HERSHEY_SIMPLEX
         cor_texto = (255, 255, 255)
         tamanho_fonte = 0.5
@@ -64,3 +66,23 @@ class HandsDetector:
 
         texto = f'Dedo: {dedo}, X: {posicao_x}, Y: {posicao_y}'
         cv2.putText(img, texto, (posicao_x, posicao_y - 10), fonte, tamanho_fonte, cor_texto, espessura_linha, cv2.LINE_AA)
+        
+    def desenhar_box(self, img: np.ndarray):
+        height, width, _ = img.shape
+
+        if self.result.multi_hand_landmarks:
+            for hand in self.result.multi_hand_landmarks:
+                x_max, y_max = float('-inf'), float('-inf')
+                x_min, y_min = float('inf'), float('inf')
+
+                for lm in hand.landmark:
+                    x, y = int(lm.x * width), int(lm.y * height)
+                    x_max = x if x > x_max else x_max
+                    x_min = x if x < x_min else x_min
+                    y_max = y if y > y_max else y_max
+                    y_min = y if y < y_min else y_min
+
+                cv2.rectangle(img, (x_min - 50, y_min - 50), (x_max + 50, y_max + 50), (0, 255, 0), 2)
+
+
+        
