@@ -71,6 +71,10 @@ class HandsDetector:
     def desenhar_box(self, img: np.ndarray):
         height, width, _ = img.shape  #posição da mão
 
+        self.x_max, self.y_max = 0, 0
+        self.x_min, self.y_min = width, height
+
+        
         if self.result.multi_hand_landmarks:
             for hand in self.result.multi_hand_landmarks:
                 self.x_max, self.y_max = float('-inf'), float('-inf')
@@ -78,12 +82,12 @@ class HandsDetector:
 
                 for lm in hand.landmark:
                     x, y = int(lm.x * width), int(lm.y * height)
-                    x_max = x if x > x_max else x_max
-                    x_min = x if x < x_min else x_min
-                    y_max = y if y > y_max else y_max
-                    y_min = y if y < y_min else y_min
+                    self.x_max = x if x > self.x_max else self.x_max
+                    self.x_min = x if x < self.x_min else self.x_min
+                    self.y_max = y if y > self.y_max else self.y_max
+                    self.y_min = y if y < self.y_min else self.y_min
 
-                cv2.rectangle(img, (x_min - 50, y_min - 50), (x_max + 50, y_max + 50), (0, 255, 0), 2)
+                return cv2.rectangle(img, (self.x_min - 50, self.y_min - 50), (self.x_max + 50, self.y_max + 50), (0, 255, 0), 2)
 
     def deteccao_modelo(self, 
                         img: np.ndarray,
@@ -98,7 +102,7 @@ class HandsDetector:
             prediction = model.predict(data)
             indexVal = np.argmax(prediction)
             
-            cv2.putText(img, classes[indexVal], (self.x_min - 50, self.y_min - 65), cv2.FONT_HERSHEY_COMPLEX, 3, (0, 0, 255), 5)
+            return cv2.putText(img, classes[indexVal], (self.x_min - 50, self.y_min - 65), cv2.FONT_HERSHEY_COMPLEX, 3, (0, 0, 255), 5)
         
         except Exception as e:
-            print(f"Erro na detecção do modelo: {e}")
+            return (f"Erro na detecção do modelo: {e}")
