@@ -4,13 +4,13 @@ import mediapipe as mp
 from keras.models import load_model
 from detector import HandsDetector 
 
-# capture = cv2.VideoCapture("src\hand_01.mp4")
-capture = cv2.VideoCapture(0)
+capture = cv2.VideoCapture("src\hand_2.mp4")
+# capture = cv2.VideoCapture(0)
 
 Detector = HandsDetector()
 
 # Modelo keras
-# classes = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+classes = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 model = load_model("model\keras_model.h5")
 data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)  # array de entrada
 # classes = [line.strip() for line in open("model\labels.txt", "r")]
